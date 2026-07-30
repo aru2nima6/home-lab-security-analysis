@@ -207,7 +207,57 @@ authentication is configured.
 ## Screenshots
 <img width="942" height="832" alt="nmap_scan" src="https://github.com/user-attachments/assets/a6b3212f-d3cb-481f-9dd6-4091b942b215" />
 
+---
 
+## Remediation — FTP Service (Port 21)
+
+**Finding:** FTP service (vsftpd 3.0.5) found open on 
+Kali VM during initial Nmap scan.
+
+**Risk:** FTP transmits credentials and data in plaintext.
+Any device on the same network can intercept FTP traffic 
+using Wireshark and read usernames and passwords directly.
+
+**Action taken:**
+
+Step 1 — Stopped the running FTP service:
+```bash
+sudo systemctl stop vsftpd
+```
+
+Step 2 — Disabled FTP from starting automatically on boot:
+```bash
+sudo systemctl disable vsftpd
+```
+
+Step 3 — Verified port 21 is closed:
+```bash
+nmap -p 21 localhost
+```
+
+**Result:** Port 21 confirmed closed — FTP service 
+no longer running or accessible.
+
+**Alternative recommended:** Use SFTP instead of FTP.
+SFTP runs over SSH (port 22) and encrypts all data 
+including credentials in transit.
+
+```bash
+# Connect via SFTP instead of FTP:
+sftp username@hostname
+```
+
+**Status: ✅ Remediated and verified**
+
+---
+
+## Before and after comparison
+
+| | Before | After |
+|---|---|---|
+| Port 21 | Open (vsftpd 3.0.5) | Closed |
+| FTP service | Running | Stopped and disabled |
+| Risk level | Medium | Resolved |
 
 ## Raw output
 Stored locally as `nmap-home-scan.txt` — not published 
